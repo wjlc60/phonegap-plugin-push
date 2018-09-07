@@ -2,6 +2,7 @@ package com.adobe.phonegap.push;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
@@ -21,6 +22,7 @@ import android.graphics.Paint;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
 import android.support.v4.app.RemoteInput;
@@ -358,7 +360,7 @@ public class GCMIntentService extends GcmListenerService implements PushConstant
         PendingIntent deleteIntent = PendingIntent.getBroadcast(this, requestCode, dismissedNotificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context, "notifications")
                         .setWhen(System.currentTimeMillis())
                         .setContentTitle(fromHtml(extras.getString(TITLE)))
                         .setTicker(fromHtml(extras.getString(TITLE)))
@@ -455,6 +457,16 @@ public class GCMIntentService extends GcmListenerService implements PushConstant
          * Notification add actions
          */
         createActions(extras, mBuilder, resources, packageName, notId);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(
+                "notifications",
+                "Notifications",
+                NotificationManager.IMPORTANCE_HIGH);
+            mChannel.enableLights(true);
+            mChannel.enableVibration(true);
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
 
         mNotificationManager.notify(appName, notId, mBuilder.build());
     }
