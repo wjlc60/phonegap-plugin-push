@@ -2,6 +2,10 @@
 
 > Register and receive push notifications
 
+This is a fork of the original phonegap-plugin-push repository. The purpose is to include some open Pull Request while we wait for the developers to merge them in the original repository.
+
+Many thanks to merrygobyebye and BobCaSUaL for their fixes in iOS.
+
 # Warning
 
 The links below take you to the version 2.x documentation which includes a
